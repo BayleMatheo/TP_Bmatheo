@@ -345,12 +345,9 @@ Address:  78.73.21.21 addresse du site
 dns.google ne parvient pas à trouver 22.146.54.58 : Non-existent domain : le site web n'existe pas
 ```
 🌞 Utilisez le pour observer les trames qui circulent entre vos deux carte Ethernet. Mettez en évidence :
-````
+
 ![ping entre passerelle et moi](image/ping.png)
-````
-````
+
 ![netcat_trame](image/netcat%20trame.png)
-````
-````
+
 ![dashnet_dns_trame](image/dns%20vers%20dashnet.png)
-````
