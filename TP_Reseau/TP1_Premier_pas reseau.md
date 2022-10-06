@@ -5,9 +5,10 @@ Carte Ethernet Ethernet, 08-8F-C3-8B-DF-D6 et adresse IP de l'interface Ethernet
 ````
 
 **🌞 Affichez votre gateway**
-
-- ipconfig 
+````
+ ipconfig 
 10.33.19.254
+````
 **🌞 Déterminer la MAC de la passerelle**
 ````
 arp -a
