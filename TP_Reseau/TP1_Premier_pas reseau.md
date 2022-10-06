@@ -64,18 +64,22 @@ Cette étape pourrait paraître cruciale. En réalité, elle n'existe pas à pro
 
 🌞 **Modifiez l'IP des deux machines pour qu'elles soient dans le même réseau**
 
-- change Ip adress, PC1 = 10.10.10.88
-								PC2 = 10.10.10.222
-🌞 **Vérifier à l'aide d'une commande que votre IP a bien été changée**
+change Ip adress, PC1 = 10.10.10.88
+PC2 = 10.10.10.222
 
-- ipconfig 
+🌞 **Vérifier à l'aide d'une commande que votre IP a bien été changée**
+````
+ipconfig 
 ipv4 : 10.10.10.88    (PC1)
 ipv4 : 10.10.10.222  (PC2)
+````
 🌞 **Vérifier que les deux machines se joignent**
 
-- la commande marche pour les deux :
+````
+la commande marche pour les deux :
 ping 10.10.10.88 
 ping 10.10.10.222
+````
 
 🌞 **Déterminer l'adresse MAC de votre correspondant**
 
@@ -135,16 +139,19 @@ L'idée est la suivante :
 
 🌞**Tester l'accès internet**
 
-- ping 8.8.8.8
+````
+ping 8.8.8.8
 Envoi d’une requête 'Ping' 8.8.8.8 avec 32 octets de données : 
 Réponse de 8.8.8.8 : octets=32 temps=22 ms TTL=113 
 Réponse de 8.8.8.8 : octets=32 temps=22 ms TTL=113 
 Réponse de 8.8.8.8 : octets=32 temps=21 ms TTL=113 
-Réponse de 8.8.8.8 : octets=32 temps=23 ms TTL=113
+Réponse de 8.8.8.8 : octets=32 temps=23 ms TTL=113`
+````
 
 🌞 **Prouver que la connexion Internet passe bien par l'autre PC**
 
-- tracert -d 8.8.8.8 Détermination de l’itinéraire vers 8.8.8.8 avec un maximum de 30 sauts. 
+````
+tracert -d 8.8.8.8 Détermination de l’itinéraire vers 8.8.8.8 avec un maximum de 30 sauts. 
 1 ms * 2 ms 192.168.137.1 
 2 * * * Délai d’attente de la demande dépassé. 
 3. 7 ms 6 ms 5 ms 10.33.19.254 
@@ -158,7 +165,7 @@ Réponse de 8.8.8.8 : octets=32 temps=23 ms TTL=113
 11. 24 ms 23 ms 22 ms 172.253.69.49 
 12. 22 ms 23 ms 22 ms 108.170.238.107 
 13. 23 ms 22 ms 23 ms 8.8.8.8
-
+````
 ## 5. Petit chat privé
 
 On va créer un chat extrêmement simpliste à l'aide de `netcat` (abrégé `nc`). Il est souvent considéré comme un bon couteau-suisse quand il s'agit de faire des choses avec le réseau.
@@ -272,6 +279,7 @@ Le but est de configurer votre firewall plutôt que de le désactiver
 
 - firewall actif 
 
+```
 PS C:\Users\mathi\TP-réseau-03-10-2022\netcat-win32-1.11\netcat-1.11> ping 192.168.1.1 
 Envoi d’une requête 'Ping' 192.168.1.1 avec 32 octets de données : 
 Réponse de 192.168.1.1 : octets=32 temps<1ms TTL=128 
@@ -282,6 +290,7 @@ Statistiques Ping pour 192.168.1.1:
 Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
 Durée approximative des boucles en millisecondes : 
 Minimum = 0ms, Maximum = 0ms, Moyenne = 0ms
+```
 
 🌞Exploration du DHCP, depuis votre PC
 
@@ -315,6 +324,7 @@ pour l'adresse 78.73.21.21 : 78-73-21-21-no168.tbcn.telia.com
 pour l'adresse 22.146.54.58 : rien
 interpréter les résultats
 
+```
 Serveur :   dns.google : nom du serveur dns
 Address:  8.8.8.8 addresses serveur dns
 
@@ -322,3 +332,4 @@ Address:  8.8.8.8 addresses serveur dns
 Nom :    78-73-21-21-no168.tbcn.telia.com nom du site
 Address:  78.73.21.21 addresse du site
 dns.google ne parvient pas à trouver 22.146.54.58 : Non-existent domain : le site web n'existe pas
+```
