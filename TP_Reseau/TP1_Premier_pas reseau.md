@@ -351,3 +351,15 @@ dns.google ne parvient pas à trouver 22.146.54.58 : Non-existent domain : le si
 ![netcat_trame](image/netcat%20trame.png)
 
 ![dashnet_dns_trame](image/dns%20vers%20dashnet.png)
+
+🌞 Wireshark it
+
+déterminez à quelle IP et quel port votre PC se connecte quand vous regardez une vidéo Youtube
+
+il sera sûrement plus simple de repérer le trafic Youtube en fermant tous les autres onglets et toutes les autres applications utilisant du réseau
+
+````
+il se connecte à l'adresse IP : 
+10.33.16.237
+sur le dsn de google donc :
+8.8.8.8
