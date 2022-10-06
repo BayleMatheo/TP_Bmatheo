@@ -88,13 +88,12 @@ ping 10.10.10.222
 ````
 
 🌞 **Déterminer l'adresse MAC de votre correspondant**
-
-- arp -a
+````
+arp -a
 Interface : 10.10.10.88 
 Adresse Internet        Adresse Physique(MAC)
 10.10.10.222              **34-73-5a-ea-15-f2**
-
-
+````
 
 ## 4. Utilisation d'un des deux comme gateway
 
@@ -222,12 +221,12 @@ Si le serveur écoute à la porte 20000, alors le client doit demander une conne
 Here we go :
 
 🌞 **sur le PC *serveur*** avec par exemple l'IP 192.168.1.1
-
-- C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888
-
+````
+C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888
+````
 🌞 **sur le PC *client*** avec par exemple l'IP 192.168.1.2
-
-- PS C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888        (PC1)
+````
+PS C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888        (PC1)
 gh
 coucou
 ça fonctionne
@@ -235,7 +234,9 @@ wa c tro bien
 uiiiiiiiiiiiii
 coucou
 vroum
-- C:\Users\mathi\TP-réseau-03-10-2022\netcat-win32-1.11\netcat-1.11> .\nc.exe 192.168.1.1 8888                     (PC2)
+````
+````
+C:\Users\mathi\TP-réseau-03-10-2022\netcat-win32-1.11\netcat-1.11> .\nc.exe 192.168.1.1 8888                     (PC2)
 gh 
 coucou 
 ça fonctionne 
@@ -243,13 +244,14 @@ wa c tro bien
 uiiiiiiiiiiiii 
 coucou
 vroum
-
+````
 ---
 
 🌞 **Visualiser la connexion en cours**
-
-- TCP    192.168.1.1:8888       192.168.1.2:55861      ESTABLISHED
+````
+  TCP    192.168.1.1:8888       192.168.1.2:55861      ESTABLISHED
  [nc.exe]
+ ````
 
 ```bash
 # Windows (dans un Powershell administrateur)
@@ -264,10 +266,11 @@ $ netstat -a -n # je crois :D
 
 🌞 **Pour aller un peu plus loin**
 
-- netstat -a -n -b | Select-String 8888
+````
+netstat -a -n -b | Select-String 8888
 
   TCP    192.168.1.1:8888       0.0.0.0:0              LISTENING
-
+````
 ```bash
 # Sur Windows/MacOS
 $ nc.exe -l -p PORT_NUMBER -s IP_ADDRESS
@@ -304,32 +307,34 @@ afficher l'adresse IP du serveur DHCP du réseau WiFi YNOV : 10.33.16.238
 cette adresse a une durée de vie limitée. C'est le principe du bail DHCP (ou DHCP lease). Trouver la date d'expiration de votre bail DHCP: vendredi 7 octobre 2022 08:40:05
 
 🌞** Trouver l'adresse IP du serveur DNS que connaît votre ordinateur**
+````
 8.8.8.8
+````
 🌞 Utiliser, en ligne de commande l'outil nslookup (Windows, MacOS) ou dig (GNU/Linux, MacOS) pour faire des requêtes DNS à la main
 
 
 faites un lookup (lookup = "dis moi à quelle IP se trouve tel nom de domaine")
-
+````
 pour google.com : 142.250.179.110
 pour ynov.com : 104.26.10.233
 interpréter les résultats de ces commandes
 
--serveur : dns.google : serveur dns utilise
+serveur : dns.google : serveur dns utilise
 address : 8.8.8.8  : addresse du serveur dns
 nom : google.com : nom du site
 Addresses :  2a00:1450:4007:80e::200e addresse ipv6
 142.250.179.110 addresses ipv4
-
+````
 
 déterminer l'adresse IP du serveur à qui vous venez d'effectuer ces requêtes : 8.8.8.8
 
 
 faites un reverse lookup (= "dis moi si tu connais un nom de domaine pour telle IP")
-
+````
 pour l'adresse 78.73.21.21 : 78-73-21-21-no168.tbcn.telia.com
 pour l'adresse 22.146.54.58 : rien
 interpréter les résultats
-
+````
 ```
 Serveur :   dns.google : nom du serveur dns
 Address:  8.8.8.8 addresses serveur dns
