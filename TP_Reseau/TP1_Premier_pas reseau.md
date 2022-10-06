@@ -1,35 +1,39 @@
 **🌞 Affichez les infos des cartes réseau de votre PC**
-
-- Carte réseau sans fil Wi-Fi, 4C-03-4F-88-B2-5B, 10.33.19.129
-- Carte Ethernet Ethernet, 08-8F-C3-8B-DF-D6 et adresse IP de l'interface Ethernet (indisponible car déconnecté du réseau)
+````
+Carte réseau sans fil Wi-Fi, 4C-03-4F-88-B2-5B, 10.33.19.129
+Carte Ethernet Ethernet, 08-8F-C3-8B-DF-D6 et adresse IP de l'interface Ethernet (indisponible car déconnecté du réseau)
+````
 
 **🌞 Affichez votre gateway**
 
 - ipconfig 
 10.33.19.254
 **🌞 Déterminer la MAC de la passerelle**
-
-- arp -a
+````
+arp -a
 00-c0-e7-e0-04-4e
+````
 **🌞 Trouvez comment afficher les informations sur une carte IP (change selon l'OS)**
-
-- Open panneau config, réseau et internet, centre réseau et partage, wifi-Ynov, détails et TADAA.
-- 10.33.19.129, 4C-03-4F-88-B2-5B et 10.33.19.254
+````
+Open panneau config, réseau et internet, centre réseau et partage, wifi-Ynov, détails et TADAA.
+10.33.19.129, 4C-03-4F-88-B2-5B et 10.33.19.254
+````
 
 ## 2. Modifications des informations
 
 ### A. Modification d'adresse IP (part 1)  
 
 🌞 Utilisez l'interface graphique de votre OS pour **changer d'adresse IP** :
-
-- Panneau Config, Réseau Internet,centre réseau et partage, wi-fi , Propriétés , IPV4
+````
+Panneau Config, Réseau Internet,centre réseau et partage, wi-fi , Propriétés , IPV4
 - 10.33.19.69
 255.255.255.0
 10.33.19.254
+````
 🌞 **Il est possible que vous perdiez l'accès internet.** Que ce soit le cas ou non, expliquez pourquoi c'est possible de perdre son accès internet en faisant cette opération.
-
-- C'est possible de perdre l'accés car si 2 personnes on la même adresse IP alors la première connecté sera prioritaire et la deuxieme n'aura rien tant que la première est connecté.
-
+````
+C'est possible de perdre l'accés car si 2 personnes on la même adresse IP alors la première connecté sera prioritaire et la deuxieme n'aura rien tant que la première est connecté.
+````
 ---
 
 # II. Exploration locale en duo
@@ -63,9 +67,10 @@ Cette étape pourrait paraître cruciale. En réalité, elle n'existe pas à pro
 ## 3. Modification d'adresse IP
 
 🌞 **Modifiez l'IP des deux machines pour qu'elles soient dans le même réseau**
-
+````
 change Ip adress, PC1 = 10.10.10.88
 PC2 = 10.10.10.222
+````
 
 🌞 **Vérifier à l'aide d'une commande que votre IP a bien été changée**
 ````
