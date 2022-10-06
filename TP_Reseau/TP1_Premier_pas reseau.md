@@ -158,3 +158,127 @@ Réponse de 8.8.8.8 : octets=32 temps=23 ms TTL=113
 11. 24 ms 23 ms 22 ms 172.253.69.49 
 12. 22 ms 23 ms 22 ms 108.170.238.107 
 13. 23 ms 22 ms 23 ms 8.8.8.8
+
+## 5. Petit chat privé
+
+On va créer un chat extrêmement simpliste à l'aide de `netcat` (abrégé `nc`). Il est souvent considéré comme un bon couteau-suisse quand il s'agit de faire des choses avec le réseau.
+
+Sous GNU/Linux et MacOS vous l'avez sûrement déjà, sinon débrouillez-vous pour l'installer :). Les Windowsien, ça se passe [ici](https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip) (from https://eclearternallybored.org/misc/netcat/).  
+
+Une fois en possession de `netcat`, vous allez pouvoir l'utiliser en ligne de commande. Comme beaucoup de commandes sous GNU/Linux, Mac et Windows, on peut utiliser l'option `-h` (`h` pour `help`) pour avoir une aide sur comment utiliser la commande.  
+
+Sur un Windows, ça donne un truc comme ça :
+
+```schema
+C:\Users\It4\Desktop\netcat-win32-1.11>nc.exe -h
+[v1.11 NT www.vulnwatch.org/netcat/]
+connect to somewhere:   nc [-options] hostname port[s] [ports] ...
+listen for inbound:     nc -l -p port [options] [hostname] [port]
+options:
+        -d              detach from console, background mode
+
+        -e prog         inbound program to exec [dangerous!!]
+        -g gateway      source-routing hop point[s], up to 8
+        -G num          source-routing pointer: 4, 8, 12, ...
+        -h              this cruft
+        -i secs         delay interval for lines sent, ports scanned
+        -l              listen mode, for inbound connects
+        -L              listen harder, re-listen on socket close
+        -n              numeric-only IP addresses, no DNS
+        -o file         hex dump of traffic
+        -p port         local port number
+        -r              randomize local and remote ports
+        -s addr         local source address
+        -t              answer TELNET negotiation
+        -u              UDP mode
+        -v              verbose [use twice to be more verbose]
+        -w secs         timeout for connects and final net reads
+        -z              zero-I/O mode [used for scanning]
+port numbers can be individual or ranges: m-n [inclusive]
+```
+
+L'idée ici est la suivante :
+
+- l'un de vous jouera le rôle d'un *serveur*
+- l'autre sera le *client* qui se connecte au *serveur*
+
+Précisément, on va dire à `netcat` d'*écouter sur un port*. Des ports, y'en a un nombre fixe (65536, on verra ça plus tard), et c'est juste le numéro de la porte à laquelle taper si on veut communiquer avec le serveur.
+
+Si le serveur écoute à la porte 20000, alors le client doit demander une connexion en tapant à la porte numéro 20000, simple non ?  
+
+Here we go :
+
+🌞 **sur le PC *serveur*** avec par exemple l'IP 192.168.1.1
+
+- C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888
+
+🌞 **sur le PC *client*** avec par exemple l'IP 192.168.1.2
+
+- PS C:\Users\Bayle\netcat-1.11> .\nc.exe -l -p 8888        (PC1)
+gh
+coucou
+ça fonctionne
+wa c tro bien
+uiiiiiiiiiiiii
+coucou
+vroum
+- C:\Users\mathi\TP-réseau-03-10-2022\netcat-win32-1.11\netcat-1.11> .\nc.exe 192.168.1.1 8888                     (PC2)
+gh 
+coucou 
+ça fonctionne 
+wa c tro bien 
+uiiiiiiiiiiiii 
+coucou
+vroum
+
+---
+
+🌞 **Visualiser la connexion en cours**
+
+- TCP    192.168.1.1:8888       192.168.1.2:55861      ESTABLISHED
+ [nc.exe]
+
+```bash
+# Windows (dans un Powershell administrateur)
+$ netstat -a -n -b
+
+# Linux
+$ ss -atnp
+
+# MacOS
+$ netstat -a -n # je crois :D
+```
+
+🌞 **Pour aller un peu plus loin**
+
+- netstat -a -n -b | Select-String 8888
+
+  TCP    192.168.1.1:8888       0.0.0.0:0              LISTENING
+
+```bash
+# Sur Windows/MacOS
+$ nc.exe -l -p PORT_NUMBER -s IP_ADDRESS
+# Par exemple
+$ nc.exe -l -p 9999 -s 192.168.1.37
+```
+
+## 6. Firewall
+
+Toujours par 2.
+
+Le but est de configurer votre firewall plutôt que de le désactiver
+
+🌞 **Activez et configurez votre firewall**
+
+- firewall actif 
+
+PS C:\Users\mathi\TP-réseau-03-10-2022\netcat-win32-1.11\netcat-1.11> ping 192.168.1.1 
+Envoi d’une requête 'Ping' 192.168.1.1 avec 32 octets de données : 
+Réponse de 192.168.1.1 : octets=32 temps<1ms TTL=128 
+Réponse de 192.168.1.1 : octets=32 temps<1ms TTL=128 
+Réponse de 192.168.1.1 : octets=32 temps<1ms TTL=128 
+Réponse de 192.168.1.1 : octets=32 temps<1ms TTL=128 
+Statistiques Ping pour 192.168.1.1: 
+Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
+Durée approximative des boucles en millisecondes : 
+Minimum = 0ms, Maximum = 0ms, Moyenne = 0ms
