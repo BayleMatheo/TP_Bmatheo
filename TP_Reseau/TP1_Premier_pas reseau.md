@@ -346,8 +346,6 @@ dns.google ne parvient pas à trouver 22.146.54.58 : Non-existent domain : le si
 ```
 🌞 Utilisez le pour observer les trames qui circulent entre vos deux carte Ethernet. Mettez en évidence :
 
-![ping](image/ping.png)
-- un `netcat` entre vous et votre mate, branché en RJ45
-- une requête DNS. Identifiez dans la capture le serveur DNS à qui vous posez la question.
-- prenez moi des screens des trames en question
-- on va prendre l'habitude d'utiliser Wireshark souvent dans les cours, pour visualiser ce qu'il se passe
+![ping entre passerelle et moi](image/ping.png)
+![netcat_trame](image/netcat%20trame.png)
+![dashnet_dns_trame](image/dns%20vers%20dashnet.png)
