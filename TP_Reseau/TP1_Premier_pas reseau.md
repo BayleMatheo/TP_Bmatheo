@@ -282,3 +282,43 @@ Statistiques Ping pour 192.168.1.1:
 Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
 Durée approximative des boucles en millisecondes : 
 Minimum = 0ms, Maximum = 0ms, Moyenne = 0ms
+
+🌞Exploration du DHCP, depuis votre PC
+
+afficher l'adresse IP du serveur DHCP du réseau WiFi YNOV : 10.33.16.238
+cette adresse a une durée de vie limitée. C'est le principe du bail DHCP (ou DHCP lease). Trouver la date d'expiration de votre bail DHCP: vendredi 7 octobre 2022 08:40:05
+
+🌞** Trouver l'adresse IP du serveur DNS que connaît votre ordinateur**
+8.8.8.8
+🌞 Utiliser, en ligne de commande l'outil nslookup (Windows, MacOS) ou dig (GNU/Linux, MacOS) pour faire des requêtes DNS à la main
+
+
+faites un lookup (lookup = "dis moi à quelle IP se trouve tel nom de domaine")
+
+pour google.com : 142.250.179.110
+pour ynov.com : 104.26.10.233
+interpréter les résultats de ces commandes
+
+-serveur : dns.google : serveur dns utilise
+address : 8.8.8.8  : addresse du serveur dns
+nom : google.com : nom du site
+Addresses :  2a00:1450:4007:80e::200e addresse ipv6
+142.250.179.110 addresses ipv4
+
+
+déterminer l'adresse IP du serveur à qui vous venez d'effectuer ces requêtes : 8.8.8.8
+
+
+faites un reverse lookup (= "dis moi si tu connais un nom de domaine pour telle IP")
+
+pour l'adresse 78.73.21.21 : 78-73-21-21-no168.tbcn.telia.com
+pour l'adresse 22.146.54.58 : rien
+interpréter les résultats
+
+Serveur :   dns.google : nom du serveur dns
+Address:  8.8.8.8 addresses serveur dns
+
+
+Nom :    78-73-21-21-no168.tbcn.telia.com nom du site
+Address:  78.73.21.21 addresse du site
+dns.google ne parvient pas à trouver 22.146.54.58 : Non-existent domain : le site web n'existe pas
