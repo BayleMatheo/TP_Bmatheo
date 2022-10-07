@@ -90,6 +90,8 @@ Et celui où il y a écrit reply c'est celui reçu en retour.
 
 🦈 **PCAP qui contient les paquets ICMP qui vous ont permis d'identifier les types ICMP**
 
+[ma capture pcap](./ping_icmp.pcapng)
+
 # [](#ii-arp-my-bro)II. ARP my bro
 
 ARP permet, pour rappel, de résoudre la situation suivante :
