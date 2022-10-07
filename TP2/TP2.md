@@ -7,8 +7,6 @@ Dans ce TP on va approfondir trois protocoles, qu'on a survolé jusqu'alors :
 -   **Ethernet** : gestion des adresses MAC
 -   **ARP** _(Address Resolution Protocol)_ : permet de trouver l'adresse MAC de quelqu'un sur notre réseau dont on connaît l'adresse IP
 
-[![Seventh Day](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/tcpip.jpg)](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/tcpip.jpg)
-
 # [](#sommaire)Sommaire
 
 -   [TP2 : Ethernet, IP, et ARP](#tp2--ethernet-ip-et-arp)
@@ -196,8 +194,6 @@ Entre introduire des fausses infos et usurper l'identité de quelqu'un il n'y a 
     -   bah ui ! Sinon on risque que la table ARP d'Alice ou Bob se vide naturellement, et que l'échange ARP normal survienne
     -   aussi, c'est un truc possible, mais pas normal dans cette utilisation là, donc des fois bon, ça chie, DONC ON SPAM
 
-[![Am I ?](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/arp_snif.jpg)](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/arp_snif.jpg)
-
 ---
 
 ➜ J'peux vous aider à le mettre en place, mais **vous le faites uniquement dans un cadre privé, chez vous, ou avec des VMs**
@@ -207,8 +203,6 @@ Entre introduire des fausses infos et usurper l'identité de quelqu'un il n'y a 
 GLHF.
 
 # [](#iii-dhcp-you-too-my-brooo)III. DHCP you too my brooo
-
-[![YOU GET AN IP](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/dhcp.jpg)](/it4lik/b1-reseau-2022/-/raw/main/tp/2/pics/dhcp.jpg)
 
 _DHCP_ pour _Dynamic Host Configuration Protocol_ est notre p'tit pote qui nous file des IPs quand on arrive dans un réseau, parce que c'est chiant de le faire à la main :)
 
