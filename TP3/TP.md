@@ -4,12 +4,63 @@
 
 🌞**Générer des requêtes ARP**
 
-- effectuer un `ping` d'une machine à l'autre
-- observer les tables ARP des deux machines
-- repérer l'adresse MAC de `john` dans la table ARP de `marcel` et vice-versa
-- prouvez que l'info est correcte (que l'adresse MAC que vous voyez dans la table est bien celle de la machine correspondante)
-  - une commande pour voir la MAC de `marcel` dans la table ARP de `john`
-  - et une commande pour afficher la MAC de `marcel`, depuis `marcel`
+```
+marcel user :
+
+[user1@localhost ~]$ ping 10.3.1.11
+PING 10.3.1.11 (10.3.1.11) 56(84) bytes of data.
+64 bytes from 10.3.1.11: icmp_seq=1 ttl=64 time=0.717 ms
+64 bytes from 10.3.1.11: icmp_seq=2 ttl=64 time=0.633 ms
+64 bytes from 10.3.1.11: icmp_seq=3 ttl=64 time=0.592 ms
+--- 10.3.1.11 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2038ms
+rtt min/avg/max/mdev = 0.592/0.647/0.717/0.052 ms
+[user1@localhost ~]$ ip neigh show 10.3.1.11
+10.3.1.11 dev enp0s8 lladdr 08:00:27:2a:0e:57 STALE
+
+```
+- L'adresse Mac associé a john est : 08:00:27:2a:0e:57
+
+```
+john user :
+
+[user1@localhost ~]$ ping 10.3.1.12
+PING 10.3.1.12 (10.3.1.12) 56(84) bytes of data.
+64 bytes from 10.3.1.12: icmp_seq=1 ttl=64 time=0.632 ms
+64 bytes from 10.3.1.12: icmp_seq=2 ttl=64 time=0.550 ms
+64 bytes from 10.3.1.12: icmp_seq=3 ttl=64 time=0.586 ms
+--- 10.3.1.12 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2056ms
+rtt min/avg/max/mdev = 0.550/0.589/0.632/0.033 ms
+[user1@localhost ~]$ arp -a
+-bash: arp: command not found
+[user1@localhost ~]$ arp
+-bash: arp: command not found
+[user1@localhost ~]$ ip neigh show 10.3.1.12
+10.3.1.12 dev enp0s8 lladdr 08:00:27:8b:62:6f STALE
+
+```
+- on voit que l'adresse mac associé a l'IP de marcel est : 08:00:27:8b:62:6f
+
+```
+marcel user :
+
+[user1@localhost ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:8b:62:6f brd ff:ff:ff:ff:ff:ff
+    inet 10.3.1.12/24 brd 10.3.1.255 scope global noprefixroute enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a00:27ff:fe8b:626f/64 scope link
+       valid_lft forever preferred_lft forever
+```
+- ici sur le client marcel on voit bien que son adresse mac est bien la bonne soit : 08:00:27:8b:62:6f
+
 
 ### 2. Analyse de trames
 
