@@ -69,7 +69,8 @@ marcel user :
 - utilisez la commande `tcpdump` pour réaliser une capture de trame
 - videz vos tables ARP, sur les deux machines, puis effectuez un `ping`
 
-🦈 **Capture réseau `tp3_arp.pcapng`** qui contient un ARP request et un ARP reply
+🦈 **Capture réseau `tp3_arp.pcapng`** qui contient un ARP request et un ARP reply 
+[tp3_arp](./tp3_arp.pcap)
 
 > **Si vous ne savez pas comment récupérer votre fichier `.pcapng`** sur votre hôte afin de l'ouvrir dans Wireshark, et me le livrer en rendu, demandez-moi.
 
