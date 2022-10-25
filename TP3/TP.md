@@ -128,15 +128,19 @@ Vous aurez besoin de 3 VMs pour cette partie. **Réutilisez les deux VMs précé
 
 🌞**Activer le routage sur le noeud `router`**
 
-> Cette étape est nécessaire car Rocky Linux c'est pas un OS dédié au routage par défaut. Ce n'est bien évidemment une opération qui n'est pas nécessaire sur un équipement routeur dédié comme du matériel Cisco.
+```
+router :
+
+[user1@localhost ~]$ sudo firewall-cmd --add-masquerade --zone=public --permanent
+success
+
+```
 
 🌞**Ajouter les routes statiques nécessaires pour que `john` et `marcel` puissent se `ping`**
 
 - il faut taper une commande `ip route add` pour cela, voir mémo
 - il faut ajouter une seule route des deux côtés
 - une fois les routes en place, vérifiez avec un `ping` que les deux machines peuvent se joindre
-
-![THE SIZE](./pics/thesize.png)
 
 ### 2. Analyse de trames
 
