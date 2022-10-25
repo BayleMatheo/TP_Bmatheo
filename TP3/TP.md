@@ -66,13 +66,43 @@ marcel user :
 
 🌞**Analyse de trames**
 
-- utilisez la commande `tcpdump` pour réaliser une capture de trame
-- videz vos tables ARP, sur les deux machines, puis effectuez un `ping`
+ ```
+marcel user :
+
+[user1@localhost ~]$ sudo ip neigh flush all
+[sudo] password for user1:
+[user1@localhost ~]$ ip neigh show
+10.3.1.50 dev enp0s8 lladdr 0a:00:27:00:00:11 REACHABLE
+[user1@localhost ~]$ sudo tcpdump -i enp0s8 -c 10 -w tp3_arp.pcap arp
+dropped privs to tcpdump
+tcpdump: listening on enp0s8, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+^C4 packets captured
+4 packets received by filter
+0 packets dropped by kernel
+
+```
+```
+john user :
+
+[user1@localhost ~]$ sudo ip neigh flush all
+[sudo] password for user1:
+[user1@localhost ~]$ ip neigh show
+10.3.1.50 dev enp0s8 lladdr 0a:00:27:00:00:11 REACHABLE
+[user1@localhost ~]$ ping 10.3.1.12
+PING 10.3.1.12 (10.3.1.12) 56(84) bytes of data.
+64 bytes from 10.3.1.12: icmp_seq=1 ttl=64 time=1.14 ms
+64 bytes from 10.3.1.12: icmp_seq=2 ttl=64 time=0.631 ms
+64 bytes from 10.3.1.12: icmp_seq=3 ttl=64 time=0.501 ms
+^C
+--- 10.3.1.12 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2051ms
+rtt min/avg/max/mdev = 0.501/0.757/1.139/0.275 ms
+
+```
+
 
 🦈 **Capture réseau `tp3_arp.pcapng`** qui contient un ARP request et un ARP reply 
 [tp3_arp](./tp3_arp.pcap)
-
-> **Si vous ne savez pas comment récupérer votre fichier `.pcapng`** sur votre hôte afin de l'ouvrir dans Wireshark, et me le livrer en rendu, demandez-moi.
 
 ## II. Routage
 
