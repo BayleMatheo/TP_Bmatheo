@@ -229,6 +229,31 @@ sudo nano /etc/resolv.conf
 google.com 8.8.8.8
 
 ```
+
+john user :
+
+dig google.com
+
+; <<>> DiG 9.16.23-RH <<>> google.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28549
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;google.com.                    IN      A
+
+;; ANSWER SECTION:
+google.com.             52      IN      A       142.250.178.142
+
+;; Query time: 32 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Fri Oct 28 12:05:34 CEST 2022
+;; MSG SIZE  rcvd: 55
+
+
 ```
 john user :
 
