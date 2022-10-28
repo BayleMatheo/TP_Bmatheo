@@ -195,11 +195,11 @@ Par exemple (copiez-collez ce tableau ce sera le plus simple) :
 
 | ordre | type trame  | IP source | MAC source              | IP destination | MAC destination            |
 |-------|-------------|-----------|-------------------------|----------------|----------------------------|
-| 1     | Requête ARP | x         | `marcel` `AA:BB:CC:DD:EE` | x              | Broadcast `FF:FF:FF:FF:FF` |
-| 2     | Réponse ARP | x         | ?                       | x              | `marcel` `AA:BB:CC:DD:EE`    |
+| 1     | Requête ARP | 10.3.1.11 |`john`   `08:00.27:2a:0e`|   10.3.1.254   | Broadcast `FF:FF:FF:FF:FF` |
+| 2     | Réponse ARP | 10.3.1.254|`router` `08:00:27:7f:51`|   10.3.1.11    | `marcel`  `08:00:27:2a:0e` |
 | ...   | ...         | ...       | ...                     |                |                            |
-| ?     | Ping        | ?         | ?                       | ?              | ?                          |
-| ?     | Pong        | ?         | ?                       | ?              | ?                          |
+| 1     | Ping        | 10.3.1.11 |`john`   `08:00:27:2a:0e`|   10.3.2.12    | `router`  `08:00:27:7f:51` |
+| 2     | Pong        | 10.3.2.12 |`router` `08:00:27:2a:51`|   10.3.1.11    | `john`    `08:00:27:7f:51` |
 
 > Vous pourriez, par curiosité, lancer la capture sur `marcel` aussi, pour voir l'échange qu'il a effectué de son côté.
 
@@ -210,13 +210,36 @@ Par exemple (copiez-collez ce tableau ce sera le plus simple) :
 
 🌞**Donnez un accès internet à vos machines**
 
-- ajoutez une carte NAT en 3ème inteface sur le `router` pour qu'il ait un accès internet
-- ajoutez une route par défaut à `john` et `marcel`
-  - vérifiez que vous avez accès internet avec un `ping`
-  - le `ping` doit être vers une IP, PAS un nom de domaine
-- donnez leur aussi l'adresse d'un serveur DNS qu'ils peuvent utiliser
-  - vérifiez que vous avez une résolution de noms qui fonctionne avec `dig`
-  - puis avec un `ping` vers un nom de domaine
+```
+john user :
+
+ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=112 time=30.1 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=112 time=23.2 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=112 time=24.0 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=112 time=24.6 ms
+
+``` 
+```
+router :
+
+sudo nano /etc/resolv.conf
+
+google.com 8.8.8.8
+
+```
+```
+john user :
+
+ping google.com
+PING google.com (142.250.201.174) 56(84) bytes of data.
+64 bytes from par21s23-in-f14.1e100.net (142.250.201.174): icmp_seq=1 ttl=112 time=22.1 ms
+64 bytes from par21s23-in-f14.1e100.net (142.250.201.174): icmp_seq=2 ttl=112 time=21.9 ms
+64 bytes from par21s23-in-f14.1e100.net (142.250.201.174): icmp_seq=3 ttl=112 time=22.1 ms
+64 bytes from par21s23-in-f14.1e100.net (142.250.201.174): icmp_seq=4 ttl=112 time=22.5 ms
+
+```
 
 🌞**Analyse de trames**
 
@@ -224,12 +247,13 @@ Par exemple (copiez-collez ce tableau ce sera le plus simple) :
 - capturez le ping depuis `john` avec `tcpdump`
 - analysez un ping aller et le retour qui correspond et mettez dans un tableau :
 
-| ordre | type trame | IP source          | MAC source              | IP destination | MAC destination |     |
-|-------|------------|--------------------|-------------------------|----------------|-----------------|-----|
-| 1     | ping       | `marcel` `10.3.1.12` | `marcel` `AA:BB:CC:DD:EE` | `8.8.8.8`      | ?               |     |
-| 2     | pong       | ...                | ...                     | ...            | ...             | ... |
+| ordre | type trame | IP source          | MAC source              | IP destination | MAC destination         |     |
+|-------|------------|--------------------|-------------------------|----------------|-------------------------|-----|
+| 1     | ping       |`john` `10.3.1.11`  |`john`   `08:00:27:2a:0e`| `8.8.8.8`      |`router` `08:00:27:7f:51`|     |
+| 2     | pong       |`DNS`  `8.8.8.8`    |`router` `08:00:27:7f:51`| `10.3.1.11`    |`john`   `08:00:27:2a:0e`| ... |
 
 🦈 **Capture réseau `tp3_routage_internet.pcapng`**
+[tp3_routage_internet](./tp3_routage_internet.pcap)
 
 ## III. DHCP
 
