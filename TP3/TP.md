@@ -229,7 +229,7 @@ sudo nano /etc/resolv.conf
 google.com 8.8.8.8
 
 ```
-
+```
 john user :
 
 dig google.com
@@ -252,7 +252,7 @@ google.com.             52      IN      A       142.250.178.142
 ;; SERVER: 8.8.8.8#53(8.8.8.8)
 ;; WHEN: Fri Oct 28 12:05:34 CEST 2022
 ;; MSG SIZE  rcvd: 55
-
+```
 
 ```
 john user :
