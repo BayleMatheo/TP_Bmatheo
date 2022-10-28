@@ -138,15 +138,52 @@ success
 
 🌞**Ajouter les routes statiques nécessaires pour que `john` et `marcel` puissent se `ping`**
 
-- il faut taper une commande `ip route add` pour cela, voir mémo
-- il faut ajouter une seule route des deux côtés
-- une fois les routes en place, vérifiez avec un `ping` que les deux machines peuvent se joindre
+```
+john user :
+
+[user1@localhost ~]$ sudo nano /etc/sysconfig/network-scripts/route-enp0s8
+[sudo] password for user1:
+[user1@localhost ~]$ cat /etc/sysconfig/network-scripts/route-enp0s8
+10.3.1.11 via 10.3.2.254 dev0 eth0
+[user1@localhost ~]$ ip route show
+10.3.1.0/24 dev enp0s8 proto kernel scope link src 10.3.1.11 metric 100
+[user1@localhost ~]$ sudo nano /etc/sysconfig/network
+[sudo] password for user1:
+GATEWAY=10.3.1.254
+[user1@localhost ~]$ sudo systemctl restart NetworkManager
+[user1@localhost ~]$ ip route show
+default via 10.3.1.254 dev enp0s8 proto static metric 100
+10.3.1.0/24 dev enp0s8 proto kernel scope link src 10.3.1.11 metric 100
+[user1@localhost ~]$ ping 10.3.2.12 //marcel user
+PING 10.3.2.12 (10.3.2.12) 56(84) bytes of data.
+64 bytes from 10.3.2.12: icmp_seq=1 ttl=63 time=1.32 ms
+64 bytes from 10.3.2.12: icmp_seq=2 ttl=63 time=0.941 ms
+64 bytes from 10.3.2.12: icmp_seq=3 ttl=63 time=1.31 ms
+
+```
+```
+[user1@localhost ~]$ sudo nano /etc/sysconfig/network-scripts/route-enp0s8
+[sudo] password for user1:
+[user1@localhost ~]$ cat /etc/sysconfig/network-scripts/route-enp0s8
+10.3.2.12 via 10.3.1.254 dev0 eth0
+[user1@localhost ~]$ ip route show
+default via 10.3.2.254 dev enp0s8 proto static metric 100
+10.3.2.0/24 dev enp0s8 proto kernel scope link src 10.3.2.12 metric 100
+[user1@localhost ~]$ sudo nano /etc/sysconfig/network
+[user1@localhost ~]$ sudo systemctl restart NetworkManager
+[user1@localhost ~]$ ping 10.3.1.11
+PING 10.3.1.11 (10.3.1.11) 56(84) bytes of data.
+64 bytes from 10.3.1.11: icmp_seq=1 ttl=63 time=1.02 ms
+64 bytes from 10.3.1.11: icmp_seq=2 ttl=63 time=1.03 ms
+64 bytes from 10.3.1.11: icmp_seq=3 ttl=63 time=1.11 ms
+```
+
 
 ### 2. Analyse de trames
 
 🌞**Analyse des échanges ARP**
 
-- videz les tables ARP des trois noeuds
+`sudo ip neigh flush all` sur les trois noeud
 - effectuez un `ping` de `john` vers `marcel`
   - **le `tcpdump` doit être lancé sur la machine `john`**
 - essayez de déduire un les échanges ARP qui ont eu lieu
@@ -167,6 +204,7 @@ Par exemple (copiez-collez ce tableau ce sera le plus simple) :
 > Vous pourriez, par curiosité, lancer la capture sur `marcel` aussi, pour voir l'échange qu'il a effectué de son côté.
 
 🦈 **Capture réseau `tp3_routage_marcel.pcapng`**
+[tp3_routage_marcel](./tp3_routage_marcel.pcap)
 
 ### 3. Accès internet
 
