@@ -308,27 +308,68 @@ On reprend la config précédente, et on ajoutera à la fin de cette partie une 
 
 🌞**Sur la machine `john`, vous installerez et configurerez un serveur DHCP** (go Google "rocky linux dhcp server").
 
-- installation du serveur sur `john`
-- créer une machine `bob`
-- faites lui récupérer une IP en DHCP à l'aide de votre serveur
-  - utilisez le mémo toujours, section "Définir une IP dynamique (DHCP)"
 
-
+````
+[user1@localhost /]$ journalctl -xeu dhcpd.service
+Oct 13 15:06:52 localhost.localdomain systemd[1]: Starting DHCPv4 Server Daemon...
+Oct 13 15:06:52 localhost.localdomain dhcpd[1924]: Server starting service.
+Oct 13 15:06:52 localhost.localdomain systemd[1]: Started DHCPv4 Server Daemon
+````
+````
+[user1@localhost ~]$ ip a
+2: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:08:44:06 brd ff:ff:ff:ff:ff:ff
+    inet 10.3.1.2/24 brd 10.3.1.255 scope global dynamic noprefixroute enp0s8
+````
 🌞**Améliorer la configuration du DHCP**
 
-- ajoutez de la configuration à votre DHCP pour qu'il donne aux clients, en plus de leur IP :
-  - une route par défaut
-  - un serveur DNS à utiliser
-- récupérez de nouveau une IP en DHCP sur `bob` pour tester :
-  - `bob` doit avoir une IP
-    - vérifier avec une commande qu'il a récupéré son IP
-    - vérifier qu'il peut `ping` sa passerelle
-  - il doit avoir une route par défaut
-    - vérifier la présence de la route avec une commande
-    - vérifier que la route fonctionne avec un `ping` vers une IP
-  - il doit connaître l'adresse d'un serveur DNS pour avoir de la résolution de noms
-    - vérifier avec la commande `dig` que ça fonctionne
-    - vérifier un `ping` vers un nom de domaine
+````
+[user1@localhost ~]$ ip a
+2: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:08:44:06 brd ff:ff:ff:ff:ff:ff
+    inet 10.3.1.2/24 brd 10.3.1.255 scope global dynamic noprefixroute enp0s8
+````
+````
+[user1@localhost ~]$ ping 10.3.1.254
+PING 10.3.1.254 (10.3.1.254) 56(84) bytes of data.
+64 bytes from 10.3.1.254: icmp_seq=1 ttl=64 time=0.639 ms
+64 bytes from 10.3.1.254: icmp_seq=2 ttl=64 time=0.903 ms
+64 bytes from 10.3.1.254: icmp_seq=3 ttl=64 time=0.584 ms
+^C
+--- 10.3.1.254 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2021ms
+rtt min/avg/max/mdev = 0.584/0.708/0.903/0.139 ms
+````
+````
+[user1@localhost ~]$ ip r s
+default via 10.3.1.254 dev enp0s8 proto dhcp src 10.3.1.2 metric 100
+10.3.1.0/24 dev enp0s8 proto kernel scope link src 10.3.1.2 metric 100
+````
+````
+[user1@localhost ~]$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=112 time=23.9 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=112 time=24.2 ms
+^C
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 23.899/24.062/24.225/0.163 ms
+````
+````
+[user1@localhost ~]$ dig google.com
+;; ANSWER SECTION:
+google.com.             300     IN      A       216.58.209.238
+````
+````
+[user1@localhost ~]$ ping google.com
+PING google.com (216.58.209.238) 56(84) bytes of data.
+64 bytes from par10s29-in-f238.1e100.net (216.58.209.238): icmp_seq=1 ttl=247 time=29.0 ms
+64 bytes from par10s29-in-f14.1e100.net (216.58.209.238): icmp_seq=2 ttl=247 time=22.9 ms
+^C
+--- google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 22.884/25.957/29.030/3.073 ms
+````
 
 ### 2. Analyse de trames
 
@@ -337,9 +378,8 @@ On reprend la config précédente, et on ajoutera à la fin de cette partie une 
 - lancer une capture à l'aide de `tcpdump` afin de capturer un échange DHCP
 - demander une nouvelle IP afin de générer un échange DHCP
 - exportez le fichier `.pcapng`
-- repérez, dans les trames DHCP observées dans Wireshark, les infos que votre serveur a fourni au client
-  - l'IP fournie au client
-  - l'adresse IP de la passerelle
-  - l'adresse du serveur DNS que vous proposez au client
+
 
 🦈 **Capture réseau `tp3_dhcp.pcapng`**
+
+[dhcp](./tp3_dhcp.pcap)
