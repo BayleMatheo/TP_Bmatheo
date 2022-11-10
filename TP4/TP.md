@@ -219,7 +219,7 @@ $TTL 86400
 [user@dns-server ~]$ sudo systemctl status named
 ● named.service - Berkeley Internet Name Domain (DNS)
      Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
-     Active: active (running) since Fri 2022-10-28 16:36:35 CEST; 14min ago
+     Active: active (running) since Fri 2022-11-10 10:36:35 CEST; 14min ago
    Main PID: 1764 (named)
       Tasks: 5 (limit: 2684)
      Memory: 14.5M
