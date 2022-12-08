@@ -156,124 +156,152 @@ Ok bon on y va ?
 
 ## 1. Mise en place
 
-![nngijgingingingijijnx ?](./pics/njgjgijigngignx.jpg)
-
 🌞 **Installer le serveur NGINX**
 
-- je vous laisse faire votre recherche internet
-- n'oubliez pas de préciser que c'est pour "Rocky 9"
+```powershell
+[tp2_linux@localhost ~]$ sudo dnf install nginx
+[tp2_linux@localhost ~]$ sudo systemctl enable nginx
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+```
 
 🌞 **Démarrer le service NGINX**
 
 🌞 **Déterminer sur quel port tourne NGINX**
 
-- vous devez filtrer la sortie de la commande utilisée pour n'afficher que les lignes demandées
-- ouvrez le port concerné dans le firewall
+```powershell
+[tp2_linux@localhost ~]$ cat /etc/nginx/nginx.conf | grep listen
+        listen       80;
+        listen       [::]:80;
+[tp2_linux@localhost ~]$  sudo firewall-cmd --add-port=80/tcp --permanent
+success
+```
 
 > **NB : c'est la dernière fois que je signale explicitement la nécessité d'ouvrir un port dans le firewall.** Vous devrez vous-mêmes y penser lorsque nécessaire. **Toutes les commandes liées au firewall doivent malgré tout figurer dans le compte-rendu.**
 
 🌞 **Déterminer les processus liés à l'exécution de NGINX**
-
-- vous devez filtrer la sortie de la commande utilisée pour n'afficher que les lignes demandées
+```powershell
+[tp2_linux@localhost ~]$ ps -ef | grep nginx
+root         825       1  0 22:16 ?        00:00:00 nginx: master process /usr/sbin/nginx
+nginx        826     825  0 22:16 ?        00:00:00 nginx: worker process
+nginx        827     825  0 22:16 ?        00:00:00 nginx: worker process
+tp2_lin+    1221    1203  0 22:17 pts/0    00:00:00 grep --color=auto nginx
+```
 
 🌞 **Euh wait**
 
-- y'a un serveur Web qui tourne là ?
-- bah... visitez le site web ?
-  - ouvrez votre navigateur (sur votre PC) et visitez `http://<IP_VM>:<PORT>`
-  - vous pouvez aussi (toujours sur votre PC) utiliser la commande `curl` depuis un terminal pour faire une requête HTTP
-- dans le compte-rendu, je veux le `curl` (pas un screen de navigateur)
-  - utilisez Git Bash si vous êtes sous Windows (obligatoire)
-  - vous utiliserez `| head` après le `curl` pour afficher que certaines des premières lignes
-  - vous utiliserez une option à cette commande `head` pour afficher les 7 premières lignes de la sortie du `curl`
+```bash
+Bayle@Ynov-Matheo MINGW64 ~ (master)
+$ curl http://10.2.2.3:80 | head -n 7
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>HTTP Server Test Page powered by: Rocky Linux</title>
+    <style type="text/css">
+
+```
 
 ## 2. Analyser la conf de NGINX
 
 🌞 **Déterminer le path du fichier de configuration de NGINX**
-
-- faites un `ls -al <PATH_VERS_LE_FICHIER>` pour le compte-rendu
+```powershell
+[tp2_linux@localhost ~]$ ls -al /etc/nginx/nginx.conf
+-rw-r--r--. 1 root root 2334 Oct 31 16:37 /etc/nginx/nginx.conf
+```
 
 🌞 **Trouver dans le fichier de conf**
 
-- les lignes qui permettent de faire tourner un site web d'accueil (la page moche que vous avez vu avec votre navigateur)
-  - ce que vous cherchez, c'est un bloc `server { }` dans le fichier de conf
-  - vous ferez un `cat <FICHIER> | grep <TEXTE> -A X` pour me montrer les lignes concernées dans le compte-rendu
-    - l'option `-A X` permet d'afficher aussi les `X` lignes après chaque ligne trouvée par `grep`
-- une ligne qui parle d'inclure d'autres fichiers de conf
-  - encore un `cat <FICHIER> | grep <TEXTE>`
-  - bah ouais, on stocke pas toute la conf dans un seul fichier, sinon ça serait le bordel
+```powershell
+cat: nginx.conf: No such file or directory
+[tp2_linux@localhost ~]$ cat /etc/nginx/nginx.conf | grep "server {" -A 16
+    server {
+        listen       80;
+        listen       [::]:80;
+        server_name  _;
+        root         /usr/share/nginx/html;
 
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        error_page 404 /404.html;
+        location = /404.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        }
+    }
+``` 
+```powershell
+[tp2_linux@localhost ~]$ cat /etc/nginx/nginx.conf | grep include
+include /usr/share/nginx/modules/*.conf;
+    include             /etc/nginx/mime.types;
+    include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/default.d/*.conf;
+```
 ## 3. Déployer un nouveau site web
 
 🌞 **Créer un site web**
 
-- bon on est pas en cours de design ici, alors on va faire simplissime
-- créer un sous-dossier dans `/var/www/`
-  - par convention, on stocke les sites web dans `/var/www/`
-  - votre dossier doit porter le nom `tp2_linux`
-- dans ce dossier `/var/www/tp2_linux`, créez un fichier `index.html`
-  - il doit contenir `<h1>MEOW mon premier serveur web</h1>`
+```powershell
+[tp2_linux@localhost tp2_linux]$ pwd
+/var/www/tp2_linux
+[tp2_linux@localhost tp2_linux]$ sudo touch index.html
+[tp2_linux@localhost tp2_linux]$ sudo nano index.html
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>MEOW</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <h1>MEOW mon premier serveur web</h1>ct
+</body>
+</html>
+
+```
 
 🌞 **Adapter la conf NGINX**
 
-- dans le fichier de conf principal
-  - vous supprimerez le bloc `server {}` repéré plus tôt pour que NGINX ne serve plus le site par défaut
-  - redémarrez NGINX pour que les changements prennent effet
-- créez un nouveau fichier de conf
-  - il doit être nommé correctement
-  - il doit être placé dans le bon dossier
-  - c'est quoi un "nom correct" et "le bon dossier" ?
-    - bah vous avez repéré dans la partie d'avant les fichiers qui sont inclus par le fichier de conf principal non ?
-    - créez votre fichier en conséquence
-  - redémarrez NGINX pour que les changements prennent effet
-  - le contenu doit être le suivant :
-
-```nginx
+```powershell
+[tp2_linux@localhost conf.d]$ sudo nano page.conf
 server {
   # le port choisi devra être obtenu avec un 'echo $RANDOM' là encore
-  listen <PORT>;
+  listen 12528;
 
   root /var/www/tp2_linux;
 }
 ```
+```powershell
+[tp2_linux@localhost nginx]$ sudo rm nginx.conf.default
+[tp2_linux@localhost nginx]$ sudo systemctl restart nginx
+[tp2_linux@localhost nginx]$ sudo firewall-cmd --add-port=12528/tcp --permanent
+success
+```
 
 🌞 **Visitez votre super site web**
-
-- toujours avec une commande `curl` depuis votre PC (ou un navigateur)
+```bash
+Bayle@Ynov-Matheo MINGW64 ~ (master)
+$
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   158  100   158    0     0  11550      0 --:--:-- --:--:-- --:--:-- 12153<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>MEOW</title>
+</head>
+<body>
+  <h1>MEOW mon premier serveur web</h1>
+</body>
+</html>
+```
 
 # III. Your own services
 
-Dans cette partie, on va créer notre propre service :)
-
-HE ! Vous vous souvenez de `netcat` ou `nc` ? Le ptit machin de notre premier cours de réseau ? C'EST L'HEURE DE LE RESORTIR DES PLACARDS.
-
-## 1. Au cas où vous auriez oublié
-
-Au cas où vous auriez oublié, une petite partie qui ne doit pas figurer dans le compte-rendu, pour vous remettre `nc` en main.
-
-> Allez-le télécharger sur votre PC si vous ne l'avez pu. Lien dans Google ou dans le premier TP réseau.
-
-➜ Dans la VM
-
-- `nc -l 8888`
-  - lance netcat en mode listen
-  - il écoute sur le port 8888
-  - sans rien préciser de plus, c'est le port 8888 TCP qui est utilisé
-
-➜ Sur votre PC
-
-- `nc <IP_VM> 8888`
-- vérifiez que vous pouvez envoyer des messages dans les deux sens
-
-> Oubliez pas d'ouvrir le port 8888/tcp de la VM bien sûr :)
-
-## 2. Analyse des services existants
-
-Un service c'est quoi concrètement ? C'est juste un processus, que le système lance, et dont il s'occupe après.
-
-Il est défini dans un simple fichier texte, qui contient une info primordiale : la commande exécutée quand on "start" le service.
-
-Il est possible de définir beaucoup d'autres paramètres optionnels afin que notre service s'exécute dans de bonnes conditions.
 
 🌞 **Afficher le fichier de service SSH**
 
@@ -288,8 +316,6 @@ Il est possible de définir beaucoup d'autres paramètres optionnels afin que no
 - mettez en évidence la ligne qui commence par `ExecStart=`
 
 ## 3. Création de service
-
-![Create service](./pics/create_service.png)
 
 Bon ! On va créer un petit service qui lance un `nc`. Et vous allez tout de suite voir pourquoi c'est pratique d'en faire un service et pas juste le lancer à la min.
 
