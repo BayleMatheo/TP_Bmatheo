@@ -305,72 +305,105 @@ $
 
 🌞 **Afficher le fichier de service SSH**
 
-- vous pouvez obtenir son chemin avec un `systemctl status <SERVICE>`
-- mettez en évidence la ligne qui commence par `ExecStart=`
-  - encore un `cat <FICHIER> | grep <TEXTE>`
-  - c'est la ligne qui définit la commande lancée lorsqu'on "start" le service
-    - taper `systemctl start <SERVICE>` ou exécuter cette commande à la main, c'est (presque) pareil
+```powershell
+[tp2_linux@localhost ~]$ cat /usr/lib/systemd/system/sshd.service | grep ExecStart=
+ExecStart=/usr/sbin/sshd -D $OPTIONS
+```
 
 🌞 **Afficher le fichier de service NGINX**
 
-- mettez en évidence la ligne qui commence par `ExecStart=`
+```powershell
+[tp2_linux@localhost ~]$ cat /usr/lib/systemd/system/nginx.service | grep ExecStart=
+ExecStart=/usr/sbin/nginx
+```
 
 ## 3. Création de service
 
-Bon ! On va créer un petit service qui lance un `nc`. Et vous allez tout de suite voir pourquoi c'est pratique d'en faire un service et pas juste le lancer à la min.
-
-Ca reste un truc pour s'exercer, c'pas non plus le truc le plus utile de l'année que de mettre un `nc` dans un service n_n
-
 🌞 **Créez le fichier `/etc/systemd/system/tp2_nc.service`**
 
-- son contenu doit être le suivant (nice & easy)
-
-```service
+```
+[tp2_linux@localhost ~]$ cat /etc/systemd/system/tp2_nc.service
 [Unit]
 Description=Super netcat tout fou
 
 [Service]
-ExecStart=/usr/bin/nc -l <PORT>
+ExecStart=/usr/bin/nc -l 26002
 ```
 
 > Vous remplacerez `<PORT>` par un numéro de port random obtenu avec la même méthode que précédemment.
 
 🌞 **Indiquer au système qu'on a modifié les fichiers de service**
-
-- la commande c'est `sudo systemctl daemon-reload`
-
+```powershell
+[tp2_linux@localhost ~]$ sudo systemctl daemon-reload
+```
 🌞 **Démarrer notre service de ouf**
 
-- avec une commande `systemctl start`
+```powershell
+[tp2_linux@localhost ~]$ sudo systemctl start tp2_nc
+```
 
 🌞 **Vérifier que ça fonctionne**
 
-- vérifier que le service tourne avec un `systemctl status <SERVICE>`
-- vérifier que `nc` écoute bien derrière un port avec un `ss`
-  - vous filtrerez avec un `| grep` la sortie de la commande pour n'afficher que les lignes intéressantes
-- vérifer que juste ça marche en vous connectant au service depuis votre PC
+```powershell
+[tp2_linux@localhost ~]$ sudo systemctl status tp2_nc
+● tp2_nc.service - Super netcat tout fou
+     Loaded: loaded (/etc/systemd/system/tp2_nc.service; static)
+     Active: active (running) since Thu 2022-12-08 23:17:16 CET; 1min 17s ago
+   Main PID: 1306 (nc)
+      Tasks: 1 (limit: 11116)
+     Memory: 1.1M
+        CPU: 12ms
+     CGroup: /system.slice/tp2_nc.service
+             └─1306 /usr/bin/nc -l 666
 
-➜ Si vous vous connectez avec le client, que vous envoyez éventuellement des messages, et que vous quittez `nc` avec un CTRL+C, alors vous pourrez constater que le service s'est stoppé
+Dec 08 23:17:16 localhost.localdomain systemd[1]: Started Super netcat tout fou.
+```
 
-- bah oui, c'est le comportement de `nc` ça ! 
-- le client se connecte, et quand il se tire, ça ferme `nc` côté serveur aussi
-- faut le relancer si vous voulez retester !
+```powershell
+[tp2_linux@localhost ~]$ ss -laptn | grep 26002
+LISTEN 0      10           0.0.0.0:26002      0.0.0.0:*
+LISTEN 0      10              [::]:26002         [::]:*
+```
 
 🌞 **Les logs de votre service**
 
-- mais euh, ça s'affiche où les messages envoyés par le client ? Dans les logs !
-- `sudo journalctl -xe -u tp2_nc` pour visualiser les logs de votre service
-- `sudo journalctl -xe -u tp2_nc -f ` pour visualiser **en temps réel** les logs de votre service
-  - `-f` comme follow (on "suit" l'arrivée des logs en temps réel)
-- dans le compte-rendu je veux
-  - une commande `journalctl` filtrée avec `grep` qui affiche la ligne qui indique le démarrage du service
-  - une commande `journalctl` filtrée avec `grep` qui affiche un message reçu qui a été envoyé par le client
-  - une commande `journalctl` filtrée avec `grep` qui affiche la ligne qui indique l'arrêt du service
+```
+sudo journalctl -xe -u tp2_nc | grep start
+ A start job for unit tp2_nc.service has finished successfully.
+
+```
+```
+[tp2_linux@localhost ~]$ sudo journalctl -xe -u tp2_nc | grep "cc"
+Dec 08 23:27:53 tp2_linux nc[2518]: cc
+
+```
+```
+sudo journalctl -xe -u tp2_nc | grep exit
+Dec 08 23:29:41 tp2_linux systemd[1]: tp2_nc.service: Failed with result 'exit-code'.
+
+```
+
+
+
 
 🌞 **Affiner la définition du service**
 
-- faire en sorte que le service redémarre automatiquement s'il se termine
-  - comme ça, quand un client se co, puis se tire, le service se relancera tout seul
-  - ajoutez `Restart=always` dans la section `[Service]` de votre service
-  - n'oubliez pas d'indiquer au système que vous avez modifié les fichiers de service :)
+```powershell
+[tp2_linux@localhost ~]$ sudo systemctl daemon-reload
+```
+```powershell
+Dec 08 23:35:56 tp2_linux systemd[1]: tp2_nc.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: https://access.redhat.com/support
+░░
+░░ The unit tp2_nc.service has entered the 'failed' state with result 'exit-code'.
+Dec 08 23:35:56 tp2_linux systemd[1]: tp2_nc.service: Scheduled restart job, restart counter is at 2.
+░░ Subject: Automatic restarting of a unit has been scheduled
+░░ Defined-By: systemd
+░░ Support: https://access.redhat.com/support
+░░
+░░ Automatic restarting of the unit tp2_nc.service has been scheduled, as the result for
+░░ the configured Restart= setting for the unit
 
+```
